@@ -1,0 +1,31 @@
+body{
+    text-align: center;
+    margin-top: 200px;
+}
+
+#app{
+    background-color: cornflowerblue;
+    font-family: 'Courier New', Courier, monospace;
+
+    border-radius: 15px;
+    padding: 1%;
+}
+
+#timer{
+    background-color: white;
+    font-size: 75px;
+   
+    border-radius: 15px;
+    
+} 
+
+button{
+    width: 100px;
+    height: 35px;
+
+    border-radius: 10px;
+}
+
+button:hover{
+    cursor: pointer;
+}
