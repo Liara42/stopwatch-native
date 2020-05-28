@@ -1,65 +1,70 @@
-function Stopwatch(){
-    let startTime = 0;
-    let endTime = 0;
-    this.running = false;
-    let duration = 0;
-    let updateTime = 0;
-  
-    this.start = function(){
-      if(!this.running){
-          startTime = Date.now();
-          duration = setInterval(updateDuration,10);
-          this.running = true;
-        }
+function Stopwatch(updateTiming, updateLaps) {
+  let startTime = 0;
+  this.running = false;
+  let duration = 0;
+  let updateTime = 0;
+  let lapArray = [];
+  this.counter = 0;
+
+  this.start = function () {
+    if (!this.running) {
+      startTime = Date.now();
+      this.running = true;
+      duration = setInterval(updateDuration, 100);
     }
-    
-    this.stop = function(){
-        if(this.running){
-            clearInterval(duration);
-            this.running = false;
-            endTime = Date.now();
-        }
-   }
-    
-    this.reset = function(){
-      startTime = 0;
-      endTime = 0;
-      duration = 0;
+  };
+
+  this.stop = function () {
+    if (this.running) {
+      endTime = Date.now() - startTime;
+      clearInterval(duration);
       this.running = false;
-      lapTimes = [];
-   }
-   
-   function updateDuration(){
-       now = Date.now();
-       updateTime += (now - startTime);
-       startTime = now;
+    }
+  };
 
-       return formatTime(updateTime);
-       
+  this.lap = function () {
+    lapArray.push(updateDuration());
+    updateLaps(lapArray);
+    this.counter++;
+  };
+
+  this.reset = function () {
+    startTime = 0;
+    this.running = false;
+    duration = 0;
+    updateTime = 0;
+    lapArray = [];
+    this.counter = 0;
+  };
+
+  function updateDuration() {
+    now = Date.now();
+    updateTime += (now - startTime) / 100;
+    startTime = now;
+    let time = formatTime(updateTime);
+    updateTiming(time);
+    return time;
+  }
+
+  function formatTime(decisecond) {
+    let seconds = Math.floor(decisecond / 10);
+    decisecond = Math.floor(decisecond - seconds * 10).toString();
+
+    let minutes = Math.floor(seconds / 60).toString();
+    seconds = (seconds % 60).toString();
+
+    if (minutes.length < 2) {
+      minutes = '0' + minutes;
     }
 
-    function formatTime(miliseconds){
-        let seconds = Math.floor(miliseconds / 1000);
-        miliseconds = (miliseconds % 1000).toString();
-
-        let minutes = Math.floor(seconds / 60).toString();
-        seconds = (seconds % 60).toString();
-
-        if (minutes.length < 2){
-            minutes = "0" + minutes;
-        }
-
-        if (seconds.length < 2){
-            seconds = "0" + seconds;
-        }
-
-        while (miliseconds < 3)
-        {
-            miliseconds = "0" + miliseconds;
-        }
-
-        return `${minutes}:${seconds}:${miliseconds}`;
+    if (seconds.length < 2) {
+      seconds = '0' + seconds;
     }
+
+    if (decisecond.length < 2) {
+      decisecond = decisecond + '0';
+    }
+
+    return `${minutes}:${seconds}:${decisecond}`;
+  }
 }
-  
-let sw = new Stopwatch();
